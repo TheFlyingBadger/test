@@ -46,7 +46,7 @@ jobs:
 
       - name: Display Outputs
         run: |
-          echo "Version=${{ steps.checkTag.outputs.exists }}"
+          echo "Version=${{ steps.version.outputs.content }}"
           echo "Exists Already=${{ steps.checkTag.outputs.exists }}"
           
 #      - name: Delete release (if it is there)
