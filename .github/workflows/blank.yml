@@ -71,23 +71,31 @@ jobs:
         with:
            version: '${{ needs.checktag.outputs.version }}'
            token: ${{ secrets.GITHUB_TOKEN }}
-           
-      - uses: actions/checkout@master
+  createrelease:
+    runs-on: ubuntu-latest
+    needs: [checktag,createtag]
+    steps:
+      - name: Display Inputs
+        run: |
+          echo "Version=${{ needs.checktag.outputs.version }}"
+          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
+       
+#      - uses: actions/checkout@master
       
-      - name: Set env
-        run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v'${{ needs.checktag.outputs.version }}'.zip'" >> $GITHUB_ENV
+#      - name: Set env
+#        run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
       
-      - name: Zip Release
-        if: contains(steps.checkTag.outputs.exists, 'false')
-        uses: TheDoctor0/zip-release@0.4.2
-        with:
-                filename: '${{ env.ZIPNAME }}'
-                exclusions: '*.git* config.json data/*'
+#      - name: Zip Release
+#        if: contains(steps.checkTag.outputs.exists, 'false')
+#        uses: TheDoctor0/zip-release@0.4.2
+#        with:
+#                filename: '${{ env.ZIPNAME }}'
+#                exclusions: '*.git* config.json data/*'
       
-      - name: Upload Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: '${{ needs.checktag.outputs.version }}'
-          artifacts: '${{ env.ZIPNAME }}'
-          token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Upload Release
+#        uses: ncipollo/release-action@v1
+#        with:
+#          tag: '${{ needs.checktag.outputs.version }}'
+#          artifacts: '${{ env.ZIPNAME }}'
+#          token: ${{ secrets.GITHUB_TOKEN }}
           
