@@ -82,7 +82,7 @@ jobs:
     steps:
       - name: Display Inputs
         run: |
-          echo "$$ {{toJSON (needs.checktag.outputs)}}"
+          echo "${{ toJSON (needs.checktag.outputs) }}"
 #          echo "Version=${{ needs.checktag.outputs.version }}"
 #          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
                 
