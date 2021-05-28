@@ -66,6 +66,11 @@ jobs:
            version: '${{ needs.checktag.outputs.version }}'
            token: ${{ secrets.GITHUB_TOKEN }}
            
+      - name: Display Message
+        if: !contains(needs.checktag.outputs.tagexists, 'false')
+        run: |
+          echo "Tag already exists, not attempting to recreate"
+           
   createrelease:
   
     runs-on: ubuntu-latest
@@ -76,16 +81,13 @@ jobs:
         run: |
           echo "Version=${{ needs.checktag.outputs.version }}"
           echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
-           
-#      - name: Delete release (if it is there)
-#        uses: cb80/delrel@latest
-#        with:
-#          tag: ${{ needs.checktag.outputs.version }}
-
-      - uses: actions/checkout@master
-     
+                
       - name: Set env
         run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
+      
+
+      - name: Pull the repo
+        uses: actions/checkout@master
       
       - name: Zip Release
         uses: TheDoctor0/zip-release@0.4.2
@@ -99,8 +101,3 @@ jobs:
           ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
           replace: '${{ needs.checktag.outputs.version }}'
           files: '${{ env.ZIPNAME }}'
-#        uses: ncipollo/release-action@v1
-#        with:
-#          tag: '${{ needs.checktag.outputs.version }}'
-#          artifacts: '${{ env.ZIPNAME }}'
-#          token: ${{ secrets.GITHUB_TOKEN }}
