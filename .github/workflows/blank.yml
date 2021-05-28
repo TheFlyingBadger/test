@@ -22,6 +22,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.content }}
       tagexists: ${{ steps.checkTag.outputs.exists }}
+      zipname: ${{ github.event.repository.name }}.$( date '+%F' ).v${{ steps.version.outputs.content }}.zip
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
@@ -45,10 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display Outputs
-        run: |
-          echo "$$ {{toJSON (steps.version.output)}}"
-          echo "Version=${{ steps.version.outputs.content }}"
-          echo "Exists Already=${{ steps.checkTag.outputs.exists }}"
+        run: echo "${{ toJSON (needs.checktag.outputs) }}"
 #  createtag:
 #  
 #    runs-on: ubuntu-latest
@@ -81,22 +79,15 @@ jobs:
     
     steps:
       - name: Display Inputs
-        run: |
-          echo "${{ toJSON (needs.checktag.outputs) }}"
-#          echo "Version=${{ needs.checktag.outputs.version }}"
-#          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
-                
-      - name: Set env
-        run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
-      
-
+        run: echo "${{ toJSON (needs.checktag.outputs) }}"
+ 
       - name: Pull the repo
         uses: actions/checkout@master
       
       - name: Zip Release
         uses: TheDoctor0/zip-release@0.4.2
         with:
-                filename: '${{ env.ZIPNAME }}'
+                filename: '${{ needs.checktag.outputs.zipname }}'
                 exclusions: '*.git* config.json data/*'
      
       - name: Upload Release
@@ -104,4 +95,4 @@ jobs:
         with:
           ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
           replace: '${{ needs.checktag.outputs.version }}'
-          files: '${{ env.ZIPNAME }}'
+          files: '${{ needs.checktag.outputs.zipname }}'
