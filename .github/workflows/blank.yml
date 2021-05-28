@@ -36,6 +36,8 @@ jobs:
       - name: Echo VERSION file
         run: echo "VERSION='${{ steps.version.outputs.content }}'"
 
+      - name: display stuff
+        run: echo "..${{ github.event.updated_at }}.."
       
       - name: Check tag
         uses: mukunku/tag-exists-action@v1.0.0
