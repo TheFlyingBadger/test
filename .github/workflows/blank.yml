@@ -41,8 +41,20 @@ jobs:
           path: VERSION
       - name: Echo VERSION file
         run: echo "${{ steps.version.outputs.content }}"
-      - name: Create Tag
-        uses: negz/create-tag@v1
-        with:
-          version: ${{ steps.version.outputs.content }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Check tag
+        uses: mukunku/tag-exists-action@v1.0.0
+        id: checkTag
+        with: 
+          tag: "${{ steps.version.outputs.content }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: echo ${{ steps.checkTag.outputs.exists }}
+#  work:
+#    needs: check
+ #     - name: Create Tag
+  #      uses: negz/create-tag@v1
+   #     with:
+    #      version: ${{ steps.version.outputs.content }}
+     #     token: ${{ secrets.GITHUB_TOKEN }}
