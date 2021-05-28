@@ -76,13 +76,11 @@ jobs:
         run: |
           echo "Version=${{ needs.checktag.outputs.version }}"
           echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
- 
-          
+           
       - name: Delete release (if it is there)
-        uses: liudonghua123/delete-release-action@v1
+        uses: cb80/delrel@latest
         with:
-          release_name: '${{ needs.checktag.outputs.version }}'
-          suppress_errors: True
+          tag: ${{ needs.checktag.outputs.version }}
 
       - uses: actions/checkout@master
      
