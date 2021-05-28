@@ -50,15 +50,15 @@ jobs:
         uses: mukunku/tag-exists-action@v1.0.0
         id: checkTag
         with: 
-          tag: ${{ env.VERSION }}
+          tag: "${{ env.VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: echo ${{ steps.checkTag.outputs.exists }}
       
       - name: Create Tag
-        if: contains(steps.checkTag.outputs.exists, 'False')
+        if: contains(steps.checkTag.outputs.exists, 'false')
         uses: negz/create-tag@v1
         with:
-          version: ${{ env.VERSION }}
+          version: "${{ env.VERSION }}"
           token: ${{ secrets.GITHUB_TOKEN }}
