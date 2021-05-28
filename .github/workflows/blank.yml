@@ -8,8 +8,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'sub-project/**'
-      - '!sub-project/docs/**'
+      - 'VERSION'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
