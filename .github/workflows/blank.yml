@@ -45,9 +45,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Display Outputs
-        run: echo "${{ toJSON (outputs) }}"
-
       - name: Display Env
         run: echo "${{ toJSON (env) }}"
 #  createtag:
