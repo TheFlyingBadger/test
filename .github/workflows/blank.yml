@@ -41,21 +41,24 @@ jobs:
           path: VERSION
           trim: True
       - name: Echo VERSION file
-        run: echo "..${{ steps.version.outputs.content }}..."
+        run: |
+            echo "VERSION='${{ steps.version.outputs.content }}' >> $GITHUB_ENV"
+
+      - run: echo "..${{ env.VERSION }}.."
       
       - name: Check tag
         uses: mukunku/tag-exists-action@v1.0.0
         id: checkTag
         with: 
-          tag: "${{ steps.version.outputs.content }}"
+          tag: ${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: echo ${{ steps.checkTag.outputs }}
-#  work:
-#    needs: check
- #     - name: Create Tag
-  #      uses: negz/create-tag@v1
-   #     with:
-    #      version: ${{ steps.version.outputs.content }}
-     #     token: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo ${{ steps.checkTag.outputs.exists }}
+      
+      - name: Create Tag
+        if: contains(steps.checkTag.outputs.exists, 'False')
+        uses: negz/create-tag@v1
+        with:
+          version: ${{ env.VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
