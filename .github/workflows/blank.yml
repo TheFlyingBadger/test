@@ -77,10 +77,10 @@ jobs:
           echo "Version=${{ needs.checktag.outputs.version }}"
           echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
            
-      - name: Delete release (if it is there)
-        uses: cb80/delrel@latest
-        with:
-          tag: ${{ needs.checktag.outputs.version }}
+#      - name: Delete release (if it is there)
+#        uses: cb80/delrel@latest
+#        with:
+#          tag: ${{ needs.checktag.outputs.version }}
 
       - uses: actions/checkout@master
      
@@ -88,15 +88,18 @@ jobs:
         run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
       
       - name: Zip Release
-        if: contains(steps.checkTag.outputs.exists, 'false')
         uses: TheDoctor0/zip-release@0.4.2
         with:
                 filename: '${{ env.ZIPNAME }}'
                 exclusions: '*.git* config.json data/*'
      
       - name: Upload Release
-        uses: ncipollo/release-action@v1
+        uses: cb80/pubrel@latest
         with:
-          tag: '${{ needs.checktag.outputs.version }}'
-          artifacts: '${{ env.ZIPNAME }}'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          replace: '${{ needs.checktag.outputs.version }}'
+          files: '${{ env.ZIPNAME }}'
+#        uses: ncipollo/release-action@v1
+#        with:
+#          tag: '${{ needs.checktag.outputs.version }}'
+#          artifacts: '${{ env.ZIPNAME }}'
+#          token: ${{ secrets.GITHUB_TOKEN }}
