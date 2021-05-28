@@ -46,42 +46,45 @@ jobs:
 
       - name: Display Outputs
         run: |
+          echo "$$ {{toJSON (steps.version.output)}}"
           echo "Version=${{ steps.version.outputs.content }}"
           echo "Exists Already=${{ steps.checkTag.outputs.exists }}"
-  createtag:
-  
-    runs-on: ubuntu-latest
-    needs: checktag        
+#  createtag:
+#  
+#    runs-on: ubuntu-latest
+#    needs: checktag        
     
-    steps:
-      - name: Display Inputs
-        run: |
-          echo "Version=${{ needs.checktag.outputs.version }}"
-          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
-    
-      - name: Create Tag
-        #if: contains(needs.checktag.outputs.tagexists, 'false')  
-        if: '!(needs.checktag.outputs.tagexists)'
-        uses: negz/create-tag@v1
-        with:
-           version: '${{ needs.checktag.outputs.version }}'
-           token: ${{ secrets.GITHUB_TOKEN }}
-           
-      - name: Display Message
-        if: needs.checktag.outputs.tagexists
-        run: |
-          echo "Tag already exists, not attempting to recreate"
+#    steps:
+#      - name: Display Inputs
+#        run: |
+#          echo "Version=${{ needs.checktag.outputs.version }}"
+#          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
+#    
+#      - name: Create Tag
+#        #if: contains(needs.checktag.outputs.tagexists, 'false')  
+#        if: '!(needs.checktag.outputs.tagexists)'
+#        uses: negz/create-tag@v1
+#        with:
+#           version: '${{ needs.checktag.outputs.version }}'
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           
+#      - name: Display Message
+#        if: needs.checktag.outputs.tagexists
+#        run: |
+#          echo "Tag already exists, not attempting to recreate"
            
   createrelease:
   
     runs-on: ubuntu-latest
-    needs: [checktag,createtag]
+    needs: checktag
+    #needs: [checktag,createtag]
     
     steps:
       - name: Display Inputs
         run: |
-          echo "Version=${{ needs.checktag.outputs.version }}"
-          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
+          echo "$$ {{toJSON (needs.checktag.outputs)}}"
+#          echo "Version=${{ needs.checktag.outputs.version }}"
+#          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
                 
       - name: Set env
         run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
