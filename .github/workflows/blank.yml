@@ -60,14 +60,15 @@ jobs:
           echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
     
       - name: Create Tag
-        if: contains(needs.checktag.outputs.tagexists, 'false')  
+        #if: contains(needs.checktag.outputs.tagexists, 'false')  
+        if: '!(needs.checktag.outputs.tagexists)'
         uses: negz/create-tag@v1
         with:
            version: '${{ needs.checktag.outputs.version }}'
            token: ${{ secrets.GITHUB_TOKEN }}
            
       - name: Display Message
-        if: !contains(needs.checktag.outputs.tagexists, 'false')
+        if: needs.checktag.outputs.tagexists
         run: |
           echo "Tag already exists, not attempting to recreate"
            
