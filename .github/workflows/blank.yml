@@ -52,7 +52,7 @@ jobs:
         uses: TheDoctor0/zip-release@0.4.2
         with:
                 filename: ${{ needs.getThisVersion.outputs.zipname }}
-                exclusions: '*.git* ./folder*'
+                exclusions: folder/**\* *.git*
  
       - name: Upload Release
         uses: cb80/pubrel@latest
