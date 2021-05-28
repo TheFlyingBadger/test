@@ -36,9 +36,14 @@ jobs:
    #       echo test, and deploy your project.
           
       - name: Read VERSION
-        id: package
+        id: version
         uses: juliangruber/read-file-action@v1
         with:
           path: VERSION
       - name: Echo VERSION file
-        run: echo "${{ steps.package.outputs.content }}"
+        run: echo "${{ steps.package.version.content }}"
+      - name: Create Tag
+        uses: negz/create-tag@v1
+        with:
+          version: ${{ gsteps.package.version.content }}
+          token: ${{ secrets.GITHUB_TOKEN }}
