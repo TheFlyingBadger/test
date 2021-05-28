@@ -97,7 +97,7 @@ jobs:
         uses: cb80/pubrel@latest
         with:
           ref: '${{ needs.checktag.outputs.version }}'
-          replace: True
+          replace: '${{ needs.checktag.outputs.version }}'
           files: '${{ env.ZIPNAME }}'
 #        uses: ncipollo/release-action@v1
 #        with:
