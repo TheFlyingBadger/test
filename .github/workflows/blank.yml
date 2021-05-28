@@ -45,5 +45,5 @@ jobs:
       - name: Create Tag
         uses: negz/create-tag@v1
         with:
-          version: ${{ gsteps.package.version.content }}
+          version: ${{ steps.package.version.content }}
           token: ${{ secrets.GITHUB_TOKEN }}
