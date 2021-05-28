@@ -22,7 +22,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.content }}
       tagexists: ${{ steps.checkTag.outputs.exists }}
-      zipname: "${{ github.event.repository.name }}.$( date '+%F' ).v${{ steps.version.outputs.content }}.zip"
+      zipname: ${{ github.event.repository.name }}.${{ github.event.updated_at }}.v${{ steps.version.outputs.content }}.zip
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
