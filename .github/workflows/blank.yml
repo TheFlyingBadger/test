@@ -47,6 +47,9 @@ jobs:
 
       - name: Display Outputs
         run: echo "${{ toJSON (outputs) }}"
+
+      - name: Display Env
+        run: echo "${{ toJSON (env) }}"
 #  createtag:
 #  
 #    runs-on: ubuntu-latest
@@ -81,18 +84,18 @@ jobs:
       - name: Display Inputs
         run: echo "${{ toJSON (needs.checktag.outputs) }}"
  
-      - name: Pull the repo
-        uses: actions/checkout@master
-      
-      - name: Zip Release
-        uses: TheDoctor0/zip-release@0.4.2
-        with:
-                filename: ${{ needs.checktag.outputs.zipname }}
-                exclusions: '*.git* config.json data/*'
-     
-      - name: Upload Release
-        uses: cb80/pubrel@latest
-        with:
-          ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
-          replace: '${{ needs.checktag.outputs.version }}'
-          files: ${{ needs.checktag.outputs.zipname }}
+#      - name: Pull the repo
+#        uses: actions/checkout@master
+#      
+#      - name: Zip Release
+#        uses: TheDoctor0/zip-release@0.4.2
+#        with:
+#                filename: ${{ needs.checktag.outputs.zipname }}
+#                exclusions: '*.git* config.json data/*'
+#     
+#      - name: Upload Release
+#        uses: cb80/pubrel@latest
+#        with:
+#          ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
+#          replace: '${{ needs.checktag.outputs.version }}'
+#          files: ${{ needs.checktag.outputs.zipname }}
