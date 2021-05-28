@@ -14,7 +14,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  
   checktag:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -22,20 +22,9 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.content }}
       tagexists: ${{ steps.checkTag.outputs.exists }}
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      #- name: Run a one-line script
-      #  run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-#      - name: Run a multi-line script
- #       run: |
-  #        echo Add other actions to build,
-   #       echo test, and deploy your project.
           
       - name: Read VERSION
         id: version
@@ -55,7 +44,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: echo ${{ steps.checkTag.outputs.exists }}
+      - name: Display Outputs
+        run: |
+          echo "Version=${{ steps.checkTag.outputs.exists }}"
+          echo "Exists Already=${{ steps.checkTag.outputs.exists }}"
           
 #      - name: Delete release (if it is there)
 #        uses: liudonghua123/delete-release-action@v1
@@ -63,24 +55,35 @@ jobs:
 #          release_name: '${{ steps.version.outputs.content }}'
 #          suppress_errors: True
   createtag:
+  
     runs-on: ubuntu-latest
     needs: checktag        
     if: contains(needs.checktag.outputs.tagexists, 'false')  
+    
     steps:
+      - name: Display Inputs
+        run: |
+          echo "Version=${{ needs.checktag.outputs.version }}"
+          echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
+    
       - name: Create Tag
         uses: negz/create-tag@v1
         with:
            version: '${{ needs.checktag.outputs.version }}'
            token: ${{ secrets.GITHUB_TOKEN }}
+           
       - uses: actions/checkout@master
+      
       - name: Set env
         run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v'${{ needs.checktag.outputs.version }}'.zip'" >> $GITHUB_ENV
+      
       - name: Zip Release
         if: contains(steps.checkTag.outputs.exists, 'false')
         uses: TheDoctor0/zip-release@0.4.2
         with:
                 filename: '${{ env.ZIPNAME }}'
                 exclusions: '*.git* config.json data/*'
+      
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
