@@ -24,7 +24,7 @@ jobs:
       tagexists: ${{ steps.checkTag.outputs.exists }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
           
       - name: Read VERSION
         id: version
@@ -78,28 +78,27 @@ jobs:
           echo "Exists Already=${{ needs.checktag.outputs.tagexists }}"
  
           
-#      - name: Delete release (if it is there)
-#        uses: liudonghua123/delete-release-action@v1
-#        with:
-#          release_name: '${{ needs.checktag.outputs.version }}'
-#          suppress_errors: True
+      - name: Delete release (if it is there)
+        uses: liudonghua123/delete-release-action@v1
+        with:
+          release_name: '${{ needs.checktag.outputs.version }}'
+          suppress_errors: True
 
-#      - uses: actions/checkout@master
+      - uses: actions/checkout@master
+     
+      - name: Set env
+        run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
       
-#      - name: Set env
-#        run: echo "ZIPNAME='${{ github.event.repository.name }}.$( date '+%F' ).v${{ needs.checktag.outputs.version }}.zip'" >> $GITHUB_ENV
-      
-#      - name: Zip Release
-#        if: contains(steps.checkTag.outputs.exists, 'false')
-#        uses: TheDoctor0/zip-release@0.4.2
-#        with:
-#                filename: '${{ env.ZIPNAME }}'
-#                exclusions: '*.git* config.json data/*'
-      
-#      - name: Upload Release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          tag: '${{ needs.checktag.outputs.version }}'
-#          artifacts: '${{ env.ZIPNAME }}'
-#          token: ${{ secrets.GITHUB_TOKEN }}
-          
+      - name: Zip Release
+        if: contains(steps.checkTag.outputs.exists, 'false')
+        uses: TheDoctor0/zip-release@0.4.2
+        with:
+                filename: '${{ env.ZIPNAME }}'
+                exclusions: '*.git* config.json data/*'
+     
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: '${{ needs.checktag.outputs.version }}'
+          artifacts: '${{ env.ZIPNAME }}'
+          token: ${{ secrets.GITHUB_TOKEN }}
