@@ -96,7 +96,7 @@ jobs:
       - name: Upload Release
         uses: cb80/pubrel@latest
         with:
-          ref: '${{ needs.checktag.outputs.version }}'
+          ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
           replace: '${{ needs.checktag.outputs.version }}'
           files: '${{ env.ZIPNAME }}'
 #        uses: ncipollo/release-action@v1
