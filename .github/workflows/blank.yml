@@ -21,7 +21,7 @@ jobs:
 
     outputs:
       version: ${{ steps.version.outputs.content }}
-      tagexists: ${{ steps.checkTag.outputs.exists }}
+      #tagexists: ${{ steps.checkTag.outputs.exists }}
       zipname: ${{ github.event.repository.name }}.${{ github.event.repository.updated_at }}.v${{ steps.version.outputs.content }}.zip
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -33,41 +33,42 @@ jobs:
         with:
           path: VERSION
           trim: True
-      - name: Echo VERSION file
-        run: echo "VERSION='${{ steps.version.outputs.content }}'"
+          
+#      - name: Echo VERSION file
+#        run: echo "VERSION='${{ steps.version.outputs.content }}'"
       
-      - name: Check tag
-        uses: mukunku/tag-exists-action@v1.0.0
-        id: checkTag
-        with: 
-          tag: '${{ steps.version.outputs.content }}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Check tag
+#        uses: mukunku/tag-exists-action@v1.0.0
+#        id: checkTag
+#        with: 
+#          tag: '${{ steps.version.outputs.content }}'
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJSON(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJSON(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
+#      - name: Dump GitHub context
+#        env:
+#          GITHUB_CONTEXT: ${{ toJSON(github) }}
+#        run: echo "$GITHUB_CONTEXT"
+#      - name: Dump job context
+#        env:
+#          JOB_CONTEXT: ${{ toJSON(job) }}
+#        run: echo "$JOB_CONTEXT"
+#      - name: Dump steps context
+#        env:
+#          STEPS_CONTEXT: ${{ toJSON(steps) }}
+#        run: echo "$STEPS_CONTEXT"
+#      - name: Dump runner context
+#        env:
+#          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+#        run: echo "$RUNNER_CONTEXT"
+#      - name: Dump strategy context
+#        env:
+#          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+#        run: echo "$STRATEGY_CONTEXT"
+#      - name: Dump matrix context
+#        env:
+#          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+#        run: echo "$MATRIX_CONTEXT"
 #  createtag:
 #  
 #    runs-on: ubuntu-latest
@@ -99,21 +100,22 @@ jobs:
     #needs: [checktag,createtag]
     
     steps:
+
       - name: Display Inputs
         run: echo "${{ toJSON (needs.checktag.outputs) }}"
  
-#      - name: Pull the repo
-#        uses: actions/checkout@master
-#      
-#      - name: Zip Release
-#        uses: TheDoctor0/zip-release@0.4.2
-#        with:
-#                filename: ${{ needs.checktag.outputs.zipname }}
-#                exclusions: '*.git* config.json data/*'
-#     
-#      - name: Upload Release
-#        uses: cb80/pubrel@latest
-#        with:
-#          ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
-#          replace: '${{ needs.checktag.outputs.version }}'
-#          files: ${{ needs.checktag.outputs.zipname }}
+      - name: Pull the repo
+        uses: actions/checkout@master
+
+      - name: Zip Release
+        uses: TheDoctor0/zip-release@0.4.2
+        with:
+                filename: ${{ needs.checktag.outputs.zipname }}
+                exclusions: '*.git* config.json data/*'
+ 
+      - name: Upload Release
+        uses: cb80/pubrel@latest
+        with:
+          ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
+          replace: '${{ needs.checktag.outputs.version }}'
+          files: ${{ needs.checktag.outputs.zipname }}
