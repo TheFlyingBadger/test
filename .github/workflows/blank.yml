@@ -50,7 +50,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: echo ${{ steps.checkTag.outputs.exists }}
+      - run: echo ${{ steps.checkTag.outputs }}
 #  work:
 #    needs: check
  #     - name: Create Tag
