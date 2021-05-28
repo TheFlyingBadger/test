@@ -22,7 +22,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.content }}
       tagexists: ${{ steps.checkTag.outputs.exists }}
-      zipname: ${{ github.event.repository.name }}.$( date '+%F' ).v${{ steps.version.outputs.content }}.zip
+      zipname: "${{ github.event.repository.name }}.$( date '+%F' ).v${{ steps.version.outputs.content }}.zip"
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
@@ -87,7 +87,7 @@ jobs:
       - name: Zip Release
         uses: TheDoctor0/zip-release@0.4.2
         with:
-                filename: '${{ needs.checktag.outputs.zipname }}'
+                filename: ${{ needs.checktag.outputs.zipname }}
                 exclusions: '*.git* config.json data/*'
      
       - name: Upload Release
@@ -95,4 +95,4 @@ jobs:
         with:
           ref: 'refs/tags/${{ needs.checktag.outputs.version }}'
           replace: '${{ needs.checktag.outputs.version }}'
-          files: '${{ needs.checktag.outputs.zipname }}'
+          files: ${{ needs.checktag.outputs.zipname }}
