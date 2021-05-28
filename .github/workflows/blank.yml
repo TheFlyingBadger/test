@@ -112,7 +112,7 @@ jobs:
         uses: TheDoctor0/zip-release@0.4.2
         with:
                 filename: ${{ needs.checktag.outputs.zipname }}
-                exclusions: '*.git* config.json ./folder/'
+                exclusions: '*.git* config.json ./folder'
  
       - name: Upload Release
         uses: cb80/pubrel@latest
