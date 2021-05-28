@@ -22,7 +22,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.content }}
       tagexists: ${{ steps.checkTag.outputs.exists }}
-      zipname: ${{ github.event.repository.name }}.${{ github.event.updated_at }}.v${{ steps.version.outputs.content }}.zip
+      zipname: ${{ github.event.repository.name }}.${{ github.event.repository.updated_at }}.v${{ steps.version.outputs.content }}.zip
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
@@ -35,9 +35,6 @@ jobs:
           trim: True
       - name: Echo VERSION file
         run: echo "VERSION='${{ steps.version.outputs.content }}'"
-
-      - name: display stuff
-        run: echo "..${{ github.event.updated_at }}.."
       
       - name: Check tag
         uses: mukunku/tag-exists-action@v1.0.0
