@@ -97,6 +97,7 @@ jobs:
   
     runs-on: ubuntu-latest
     needs: checktag
+    if: ${{ !(needs.checktag.outputs.version == null)  }}
     #needs: [checktag,createtag]
     
     steps:
