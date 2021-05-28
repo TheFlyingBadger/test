@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display Outputs
-        run: echo "${{ toJSON (needs.checktag.outputs) }}"
+        run: echo "${{ toJSON (outputs) }}"
 #  createtag:
 #  
 #    runs-on: ubuntu-latest
