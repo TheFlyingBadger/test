@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
  
       - name: Delete the tag
-        if: steps.checkTag.outputs.exists
+        if: ${{ steps.checkTag.outputs.exists == true }}
         uses: author/action-rollback@stable
         with:
           tag: ${{ steps.version.outputs.content }}
