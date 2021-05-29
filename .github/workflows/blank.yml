@@ -48,7 +48,8 @@ jobs:
       - name: Pull the repo
         uses: actions/checkout@master
       - name: Zip Folder
-        run: zip -r ${{ needs.getThisVersion.outputs.zipname }} . -x *.git* folder/**\* ./folder/
+        run: zip -r ${{ needs.getThisVersion.outputs.zipname }} . -x *.git* ./folder/
+        #run: zip -r ${{ needs.getThisVersion.outputs.zipname }} . -x *.git* folder/**\* ./folder/
       - name: Release to Github
         run: echo "Release"
 
