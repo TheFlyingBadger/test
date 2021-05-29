@@ -21,7 +21,7 @@ jobs:
 
     outputs:
       version: ${{ steps.version.outputs.content }}
-      tagexists: ${{ steps.checkTag.outputs.exists }}
+      #tagexists: ${{ steps.checkTag.outputs.exists }}
       zipname: ${{ github.event.repository.name }}.${{ github.event.repository.updated_at }}.v${{ steps.version.outputs.content }}.zip
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -43,6 +43,14 @@ jobs:
           tag: '${{ steps.version.outputs.content }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
+      - name: Delete the tag
+        if: steps.checkTag.outputs.exists
+        uses: author/action-rollback@stable
+        with:
+          tag: ${{ steps.version.outputs.content }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                      
   createrelease:
   
@@ -55,27 +63,11 @@ jobs:
       - name: Display Inputs
         run: echo "${{ toJSON (needs.getThisVersion.outputs) }}"
  
-      - name: Delete the tag
-        if: needs.getThisVersion.outputs.tagexists
-        uses: author/action-rollback@stable
-        with:
-          tag: ${{ needs.getThisVersion.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- 
       - name: Pull the repo
         uses: actions/checkout@master
         
       - name: Zip Folder
         run: zip -r ${{ needs.getThisVersion.outputs.zipname }} . -x *.git* folder/**\* ./folder/
-      - name: Release to Github
-        run: echo "Release"
-
-  #    - name: Zip Release
-   ##     uses: TheDoctor0/zip-release@0.4.2
-    #    with:
-    #            filename: 
-    #            exclusions: folder/**\* *.git*
  
       - name: Upload Release
         uses: cb80/pubrel@latest
