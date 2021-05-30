@@ -30,46 +30,15 @@ jobs:
         with:
           path: VERSION
           trim: True
-          
-      - name: Check tag
-        uses: mukunku/tag-exists-action@v1.0.0
-        id: checkTag
-        with: 
-          tag: '${{ steps.version.outputs.content }}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- 
-      - name: Delete the tag
-        if: ${{ steps.checkTag.outputs.exists == true }}
-        uses: author/action-rollback@stable
-        with:
-          tag: ${{ steps.version.outputs.content }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                     
-  createrelease:
-  
-    runs-on: ubuntu-latest
-    needs: getThisVersion
-    if: ${{ !(needs.getThisVersion.outputs.version == null)  }}
-    
-    steps:
 
-      - name: Display Inputs
-        run: echo "${{ toJSON (needs.getThisVersion.outputs) }}"
- 
-      - name: Pull the repo
-        uses: actions/checkout@master
+      - name: get filename
+        run: |
+          echo "ZIPNAME=${{ github.event.repository.name }}.${{ github.event.repository.updated_at }}.v${{ steps.version.outputs.content }}.zip" >> $GITHUB_ENV
+          source $GITHUB_ENV
+          echo "SP_ZIPNAME=$(echo "${{ env.ZIPNAME }}" | sed s/://g)" >> $GITHUB_ENV
         
       - name: Zip Folder
-        run: |
-          echo "SP_ZIPNAME=$(echo "${{ needs.getThisVersion.outputs.zipname }}" | sed s/://g)" >> $GITHUB_ENV
-          pwd
-          mkdir workspace
-          ls -al
-          ln -s $PWD /github
-          ln -s ${{ needs.getThisVersion.outputs.zipname }} workspace/.
-          ls -al /github/workspace
+        run: zip -r ${{ env.ZIPNAME }} . -x *.git* data/**\* ./data/ config.json        
         
       - name: SharePoint uploader
         uses: su-dont/share-point-uploader@v2.1
@@ -79,5 +48,5 @@ jobs:
           sp_username: ${{ secrets.SP_USERNAME }}
           sp_password: ${{ secrets.SP_PASSWORD }}
           sp_folder: /Shared Documents
-          sp_file_name: SP_ZIPNAME
-          file: ${{ needs.getThisVersion.outputs.zipname }}
+          sp_file_name: ${{ env.SP_ZIPNAME }}
+          file: ${{ env.ZIPNAME }}
