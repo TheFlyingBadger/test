@@ -66,6 +66,8 @@ jobs:
           echo "SP_ZIPNAME=$(echo "${{ needs.getThisVersion.outputs.zipname }}" | sed s/://g)" >> $GITHUB_ENV
           pwd
           ls -al
+          ls -al /github/workspace
+          ln -s $PWD /github/workspace
         
       - name: SharePoint uploader
         uses: su-dont/share-point-uploader@v2.1
@@ -76,4 +78,4 @@ jobs:
           sp_password: ${{ secrets.SP_PASSWORD }}
           sp_folder: /Shared Documents
           sp_file_name: SP_ZIPNAME
-          file: ./${{ needs.getThisVersion.outputs.zipname }}
+          file: ${{ needs.getThisVersion.outputs.zipname }}
