@@ -63,7 +63,9 @@ jobs:
         
       - name: Zip Folder
         run: |
-          echo "SP_ZIPNAME=$(echo "${{ needs.getThisVersion.outputs.zipname }}" | sed s/from/to/g)" >> $GITHUB_ENV
+          echo "SP_ZIPNAME=$(echo "${{ needs.getThisVersion.outputs.zipname }}" | sed s/://g)" >> $GITHUB_ENV
+          pwd
+          ls -al
         
       - name: SharePoint uploader
         uses: su-dont/share-point-uploader@v2.1
@@ -74,4 +76,4 @@ jobs:
           sp_password: ${{ secrets.SP_PASSWORD }}
           sp_folder: /Shared Documents
           sp_file_name: SP_ZIPNAME
-          file: ${{ needs.getThisVersion.outputs.zipname }}
+          file: ./${{ needs.getThisVersion.outputs.zipname }}
