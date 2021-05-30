@@ -65,8 +65,11 @@ jobs:
         run: |
           echo "SP_ZIPNAME=$(echo "${{ needs.getThisVersion.outputs.zipname }}" | sed s/://g)" >> $GITHUB_ENV
           pwd
+          mkdir workspace
           ls -al
-          ln -s $PWD /github/workspace
+          ln -s $PWD /github
+          ln -s ${{ needs.getThisVersion.outputs.zipname }} workspace/.
+          ls -al /github/workspace
         
       - name: SharePoint uploader
         uses: su-dont/share-point-uploader@v2.1
