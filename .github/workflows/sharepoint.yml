@@ -34,8 +34,7 @@ jobs:
       - name: get filename
         run: |
           echo "ZIPNAME=${{ github.event.repository.name }}.${{ github.event.repository.updated_at }}.v${{ steps.version.outputs.content }}.zip" >> $GITHUB_ENV
-          source $GITHUB_ENV
-          echo "SP_ZIPNAME=$(echo "${{ env.ZIPNAME }}" | sed s/://g)" >> $GITHUB_ENV
+          echo "SP_ZIPNAME=$(echo ${{ env.ZIPNAME }} | sed s/://g)" >> $GITHUB_ENV
         
       - name: Zip Folder
         run: zip -r ${{ env.ZIPNAME }} . -x *.git* data/**\* ./data/ config.json        
@@ -44,7 +43,7 @@ jobs:
         uses: su-dont/share-point-uploader@v2.1
         with:
           #sp_url: https://emills.sharepoint.com/:f:/r/sites/docs
-          sp_url: https://emills.sharepoint.com/
+          sp_url: https://emills.sharepoint.com//:f:/r/sites/docs
           sp_username: ${{ secrets.SP_USERNAME }}
           sp_password: ${{ secrets.SP_PASSWORD }}
           sp_folder: /Shared Documents
