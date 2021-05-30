@@ -67,7 +67,8 @@ jobs:
       - name: SharePoint uploader
         uses: su-dont/share-point-uploader@v2.1
         with:
-          sp_url: https://emills.sharepoint.com/:f:/r/sites/docs
+          #sp_url: https://emills.sharepoint.com/:f:/r/sites/docs
+          sp_url: https://emills.sharepoint.com/
           sp_username: ${{ secrets.SP_USERNAME }}
           sp_password: ${{ secrets.SP_PASSWORD }}
           sp_folder: /Shared Documents
