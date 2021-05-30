@@ -72,6 +72,5 @@ jobs:
           sp_username: ${{ secrets.SP_USERNAME }}
           sp_password: ${{ secrets.SP_PASSWORD }}
           sp_folder: /Shared Documents
-          sp_file_name: ${{ needs.getThisVersion.outputs.zipname }}
+          sp_file_name: ${{ needs.getThisVersion.outputs.zipname//:/ }}
           file: ${{ needs.getThisVersion.outputs.zipname }}
-        
